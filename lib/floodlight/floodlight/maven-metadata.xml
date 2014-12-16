@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>floodlight</groupId>
+  <artifactId>floodlight</artifactId>
+  <versioning>
+    <release>master</release>
+    <versions>
+      <version>master</version>
+    </versions>
+    <lastUpdated>20141215094656</lastUpdated>
+  </versioning>
+</metadata>
