@@ -24,15 +24,10 @@ Information can be found here:
 Installation and configuration
 ==============================
 
-This project has been developed and tested on Floodlight master version. After its installation the ``floodlight.jar`` and
-``floodlight-test.jar`` files must be copied withint the lib folder of this project. These jars will be used as dependencies
-to the maven repository. The current repository has these two files compiled from the master release of floodlight
-at the time of creation of the project.
-
-To verify everything is ok in your project, you can test the execution of tests by running ``mvn test`` from the main
-project folder. At this point the project can be imported into Eclipse and run right away.
-The project is alredy configured to be integrated with Sonarqube. A specific maven profile has been created. To send
-reports to Sonarqube execute the following commands ``mvn clean verify && mvn sonar:sonar -Psonar``.
+This project has been developed and tested on Ryu master version. You than need to download Ryu and install it
+as described in the project files.
+Once Ryu has been installed this software can be executed by specifying:
+``python /usr/local/bin/ryu-manager green_mst.py --observe-links``.
 
 Block or turn-off ports
 -----------------------
@@ -40,26 +35,8 @@ Block or turn-off ports
 By deafult, ports are blocked to generate the minimum spanning tree of the network. At the beginning ports were
 turned off (to save energy in DC) but some difficulties occurred. Infact, turning off ports on the switches send to the
 controller a link removed message. The controller is unable to understand if a link goes down because of its decision
-or a manual setup. We suggest to leave the blocking decision on, anyway the following step can be performed to change
-to the previous behaviour:
-- Comment as follows line 179 in GreenMST.java file: // portMod.setMask(OFPortConfig.OFPPC_NO_FLOOD.getValue()); 
-- Then, uncomment as follows line 178 in GreenMST.java: portMod.setMask(OFPortConfig.OFPPC_PORT_DOWN.getValue());
-
-Create a runnable file
-----------------------
-
-It is possible to create a ``greenmst.jar`` with the compiled files from this project.
-According to Floodlight command sintax, you can integrate the jar file to your Floodlight installation running the
-command:
-```
-java -cp floodlight.jar:greenmst.jar -Dlogback.configurationFile=logback.xml net.floodlightcontroller.core.Main -cf floodlight.properties
-```
-
-The parameters specified have the following meaning:
- * ``logback.xml`` is the XML file which permits to configure the log facility for the running instance of Floodlight
- * ``floodlight.properties`` is the file specifying the properties for the running instance of Floodlight,
-   it is configred to start the GreenMST module provided with this project.
-
+or a manual setup. We suggest to leave the blocking decision on, anyway by a very simple modification on the code you
+can perform the change in the behaviour.
 
 Utilities
 =========
