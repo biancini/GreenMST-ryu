@@ -27,7 +27,7 @@ Installation and configuration
 This project has been developed and tested on Ryu master version. You than need to download Ryu and install it
 as described in the project files.
 Once Ryu has been installed this software can be executed by specifying:
-``python /usr/local/bin/ryu-manager green_mst.py --observe-links``.
+``ryu-manager green_mst.py --observe-links``.
 
 Block or turn-off ports
 -----------------------
