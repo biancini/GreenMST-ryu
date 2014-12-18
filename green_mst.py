@@ -42,8 +42,7 @@ class GreenMST(SimpleSwitch):
         src = int(msg['src']['dpid'])
         dst = int(msg['dst']['dpid'])
 
-        #self.logger.info('%s', ev)
-        #self.logger.info('Link added: Link (%s, %s) with cost: %s.' % (src, dst, self.topo_costs.get_cost(src, dst)), msg)
+        self.logger.info('Link added: Link (%s, %s) with cost: %s.' % (src, dst, self.topo_costs.get_cost(src, dst)), msg)
 
     @set_ev_cls(event.EventLinkDelete)
     def _event_link_delete_handler(self, ev):
@@ -54,5 +53,5 @@ class GreenMST(SimpleSwitch):
         src = int(msg['src']['dpid'])
         dst = int(msg['dst']['dpid'])
 
-        #self.logger.info('%s', ev)
-        #self.logger.info('Link removed: Link (%s, %s) with cost: %s.' % (src, dst, self.topo_costs.get_cost(src, dst)), msg)
+        self.logger.info('Link removed: Link (%s, %s) with cost: %s.' % (src, dst, self.topo_costs.get_cost(src, dst)), msg)
+

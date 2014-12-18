@@ -25,7 +25,7 @@ from ryu.controller import mac_to_port
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
-from ryu.ofproto import ofproto_v1_0
+from ryu.ofproto import ofproto_v1_0, ether
 from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
@@ -60,6 +60,9 @@ class SimpleSwitch(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocol(ethernet.ethernet)
 
+        if eth.ethertype == ether.ETH_TYPE_LLDP:
+            return
+
         dst = eth.dst
         src = eth.src
 
@@ -75,7 +78,6 @@ class SimpleSwitch(app_manager.RyuApp):
             out_port = self.mac_to_port[dpid][dst]
         else:
             out_port = ofproto.OFPP_FLOOD
-            self.logger.info("packet in %s %s %s %s %s", dpid, src, dst, msg.in_port, self.mac_to_port[dpid])
 
         actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
 
@@ -91,3 +93,15 @@ class SimpleSwitch(app_manager.RyuApp):
             datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
             actions=actions, data=data)
         datapath.send_msg(out)
+
+    @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
+    def _port_status_handler(self, ev):
+        msg = ev.msg
+        datapath = msg.datapath
+        reason = msg.reason
+        port_no = msg.desc.port_no
+
+        dpid = datapath.id
+        ofproto = msg.datapath.ofproto
+        if reason == ofproto.OFPPR_DELETE or reason == ofproto.OFPPR_MODIFY:
+            self.mac_to_port[dpid] = {mac:port for mac,port in self.mac_to_port[dpid].items() if mac != port_no}
