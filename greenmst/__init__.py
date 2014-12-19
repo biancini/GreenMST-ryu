@@ -16,6 +16,7 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 from controller import Controller
+from rest import ControllerWithRestAPI
 
-__all__ = ['Controller']
+__all__ = ['Controller', 'ControllerWithRestAPI']
 

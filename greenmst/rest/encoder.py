@@ -15,8 +15,12 @@
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
-from greenmst import ControllerWithRestAPI
+import json
+from ..link import Link
 
-class GreenMST(ControllerWithRestAPI):
-    def __init__(self, *args, **kwargs):
-        super(GreenMST, self).__init__(*args, **kwargs)
+class LinkEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Link):
+            return obj.to_json()
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, obj)

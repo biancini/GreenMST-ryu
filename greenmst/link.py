@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ryu.topology.api import get_switch
 from topology_costs import TopologyCosts
+import json
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
@@ -40,10 +42,36 @@ class Link():
         return 'Link (%s, %s) with cost: %s' % (self.src, self.dst, self.cost)
 
     def __repr__(self):
-        return 'Link (%s, %s) with cost: %s' % (self.src, self.dst, self.cost)
+        return '<%s(src=%s, dst=%s, src_port=%s, dst_port=%s, cost=%s)>' % (self.__class__, self.src, self.dst, self.src_port, self.dst_port, self.cost)
 
     def __unicode__(self):
         return u'Link (%s, %s) with cost: %s' % (self.src, self.dst, self.cost)
 
     def link_inverse(self):
         return Link(src=self.dst, dst=self.src, src_port=self.src_port, dst_port=self.dst_port, cost=self.cost)
+
+    def to_hex_string(self, val, pad_to=8):
+        arr = str(hex(val))[2:]
+        ret = ''
+        # prepend the right number of leading zeros
+        i = 0
+        while i < (pad_to * 2 - len(arr)):
+            ret += '0'
+            if (i % 2) != 0:
+                ret += ':'
+            i = i+1
+
+        for j in range(0, len(arr)):
+            ret += arr[j]
+            if (((i + j) % 2) != 0) and (j < (len(arr) - 1)):
+                ret += ':'
+        return ret;
+
+    def to_json(self):
+        return {
+            'sourceSwitch': self.to_hex_string(self.dst),
+            'sourcePort': self.src_port,
+            'destinationSwitch': self.to_hex_string(self.src),
+            'destinationPort': self.dst_port,
+            'cost': self.cost
+        }

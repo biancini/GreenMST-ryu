@@ -15,16 +15,17 @@
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
-import logging
+def singleton(class_):
+  instances = {}
+  def getinstance(*args, **kwargs):
+    if class_ not in instances:
+        instances[class_] = class_(*args, **kwargs)
+    return instances[class_]
+  return getinstance
 
+@singleton
 class TopologyCosts():
     DEFAULT_COST = 1
-
-    _instance = None
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(TopologyCosts, cls).__new__(cls, *args, **kwargs)
-        return cls._instance
 
     def __init__(self, *args, **kwargs):
         self.costs = {}
@@ -38,4 +39,5 @@ class TopologyCosts():
         elif '%s,%s' % (destination, source) in self.costs:
             return int(self.costs['%s,%s' % (destination, source)])
         else:
+            self.costs['%s,%s' % (destination, source)] = self.DEFAULT_COST
             return self.DEFAULT_COST

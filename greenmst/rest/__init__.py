@@ -15,8 +15,6 @@
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
-from greenmst import ControllerWithRestAPI
+from rest_api import ControllerWithRestAPI
 
-class GreenMST(ControllerWithRestAPI):
-    def __init__(self, *args, **kwargs):
-        super(GreenMST, self).__init__(*args, **kwargs)
+__all__ = ['ControllerWithRestAPI']

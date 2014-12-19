@@ -38,6 +38,7 @@ class Controller(SimpleSwitch):
         super(Controller, self).__init__(*args, **kwargs)
         self.topo_edges = []
         self.redundant_edges = []
+        self.mst_edges = []
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
@@ -66,14 +67,13 @@ class Controller(SimpleSwitch):
 
     def update_links(self):
         self.logger.debug('Updating MST because of topology change...')
-
         old_redundant_edges = self.redundant_edges
 
         from algorithm import kruskal as algorithm
-        mst_edges = algorithm.perform(self.topo_edges)
-        self.logger.debug('mstEdges = %s', mst_edges)
+        self.mst_edges = algorithm.perform(self.topo_edges)
+        self.logger.debug('mstEdges = %s', self.mst_edges)
 
-        new_redundant_edges = self.find_redundant_edges(mst_edges)
+        new_redundant_edges = self.find_redundant_edges(self.mst_edges)
         self.logger.debug('newRedundantEdges = %s.', new_redundant_edges)
 
         if len(new_redundant_edges) == 0: return
