@@ -16,6 +16,7 @@
 """
 An OpenFlow 1.0 L2 learning switch implementation.
 """
+__author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 import logging
 import struct

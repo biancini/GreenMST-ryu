@@ -15,8 +15,7 @@
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
-from greenmst import Controller
+from controller import Controller
 
-class GreenMST(Controller):
-    def __init__(self, *args, **kwargs):
-        super(GreenMST, self).__init__(*args, **kwargs)
+__all__ = ['Controller']
+

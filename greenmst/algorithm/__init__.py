@@ -14,9 +14,3 @@
 # limitations under the License.
 
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
-
-from greenmst import Controller
-
-class GreenMST(Controller):
-    def __init__(self, *args, **kwargs):
-        super(GreenMST, self).__init__(*args, **kwargs)
