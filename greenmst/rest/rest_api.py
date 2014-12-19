@@ -16,6 +16,7 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 import json
+import re
 
 from ryu.app.wsgi import ControllerBase, WSGIApplication, route
 from ryu.topology import switches
@@ -46,6 +47,31 @@ class GreenMSTAPIController(ControllerBase):
     def list_topocosts(self, req, **kwargs):
         topo_costs = TopologyCosts()
         body = json.dumps(topo_costs.costs, cls=LinkEncoder)
+        return Response(content_type='application/json', body=body)
+
+    @route('greenmst', '/wm/greenmst/topocosts/json', methods=['POST'])
+    def set_topocosts(self, req, **kwargs):
+        topo_costs = TopologyCosts()
+        new_costs = topo_costs.costs
+
+        # Validate JSON passed as input
+        if req.body:
+            new_costs = json.loads(req.body)
+            valid_input = isinstance(new_costs, list)
+            pattern = re.compile('\d+,\d+')
+            if valid_input:
+                for newcost in new_costs:
+                    valid_input = valid_input and isinstance(newcost, dict)
+                    if valid_input:
+                        for key,val in newcost.iteritems():
+                            valid_input = valid_input and pattern.match(key) and isinstance(val, (int, long, float))
+
+        if valid_input:
+            topo_costs.costs = new_costs
+            body = json.dumps({ 'status': 'new topology costs set' })
+        else:
+            body = json.dumps({ 'status': 'Error! Could not parse new topology costs, see log for details.' })
+
         return Response(content_type='application/json', body=body)
 
     @route('greenmst', '/wm/greenmst/mstedges/json', methods=['GET'])
