@@ -67,7 +67,7 @@ class GreenMSTAPIController(ControllerBase):
                             valid_input = valid_input and pattern.match(key) and isinstance(val, (int, long, float))
 
         if valid_input:
-            topo_costs.costs = new_costs
+            self.topology_api_app.set_costs(new_costs)
             body = json.dumps({ 'status': 'new topology costs set' })
         else:
             body = json.dumps({ 'status': 'Error! Could not parse new topology costs, see log for details.' })

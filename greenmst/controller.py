@@ -65,6 +65,11 @@ class Controller(SimpleSwitch):
             self.logger.debug('Link removed: %s.', link)
             self.update_links()
 
+    def set_costs(self, new_costs):
+        topo_costs = TopologyCosts()
+        topo_costs.costs = new_costs
+        self.update_links()
+
     def update_links(self):
         self.logger.debug('Updating MST because of topology change...')
         old_redundant_edges = self.redundant_edges
