@@ -6,5 +6,9 @@ install:
   - pip install greenlet
   - pip install repoze.lru
   - pip install coverage
+  - pip install coveralls
 script:
   - nosetests --with-coverage --cover-package=greenmst
+after_success:
+  - coveralls
+
