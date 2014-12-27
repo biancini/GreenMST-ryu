@@ -77,27 +77,3 @@ def perform(topo_edges):
     #for curedge in mst:
     #    links.append(Link(src=curedge[1], dst=curedge[2], cost=curedge[0]))
     return links
-
-import unittest
-class kruskal_test(unittest.TestCase):
-    def test_kruskal(self):
-        graph = {
-                'vertices': ['A', 'B', 'C', 'D', 'E', 'F'],
-                'edges': set([
-                    (1, 'A', 'B'),
-                    (5, 'A', 'C'),
-                    (3, 'A', 'D'),
-                    (4, 'B', 'C'),
-                    (2, 'B', 'D'),
-                    (1, 'C', 'D'),
-                    ])
-                }
-        minimum_spanning_tree = set([
-                    (1, 'A', 'B'),
-                    (2, 'B', 'D'),
-                    (1, 'C', 'D'),
-                    ])
-        self.assertEqual(kruskal(graph), minimum_spanning_tree)
-
-if __name__ == "__main__":
-    unittest.main()
