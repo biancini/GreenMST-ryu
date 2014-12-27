@@ -1,4 +1,4 @@
-GreenMST RYU module [![Build Status](https://travis-ci.org/biancini/GreenMST-ryu.svg?branch=master)](https://travis-ci.org/biancini/GreenMST-ryu)
+GreenMST RYU module [![Build Status](https://travis-ci.org/biancini/GreenMST-ryu.svg?branch=master)](https://travis-ci.org/biancini/GreenMST-ryu) [![Coverage Status](https://coveralls.io/repos/biancini/GreenMST-ryu/badge.png?branch=master)](https://coveralls.io/r/biancini/GreenMST-ryu?branch=master)
 ===================
 
 Implementation of module for RYU implements a MST over a network.
