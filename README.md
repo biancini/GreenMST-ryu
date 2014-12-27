@@ -1,4 +1,4 @@
-GreenMST RYU module
+GreenMST RYU module [![Build Status](https://travis-ci.org/biancini/GreenMST-ryu.svg?branch=master)](https://travis-ci.org/biancini/GreenMST-ryu)
 ===================
 
 Implementation of module for RYU implements a MST over a network.
