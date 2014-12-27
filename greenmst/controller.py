@@ -16,8 +16,6 @@
 """
 An OpenFlow 1.0 GreenMST loop free module.
 """
-from iotop import data
-
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 from ryu.topology import event, switches

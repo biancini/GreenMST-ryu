@@ -2,5 +2,8 @@ language: python
 python:
   - "2.7"
 install:
-  - pip install ryu"
-#script: nosetests
+  - cd ryu; python ./setup.py install; cd ..
+  - pip install greenlet
+  - pip install repoze.lru
+script:
+  - nosetests
