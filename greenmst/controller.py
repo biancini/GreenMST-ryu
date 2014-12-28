@@ -18,9 +18,9 @@ An OpenFlow 1.0 GreenMST loop free module.
 """
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
-from ryu.topology import event, switches
+from ryu.topology import event, switches, api
 from ryu.controller.handler import set_ev_cls
-from ryu.topology.api import get_switch
+#from ryu.topology.api import get_switch
 
 from greenmst.simple_switch import SimpleSwitch
 from link import Link
@@ -112,7 +112,7 @@ class Controller(SimpleSwitch):
         return redundant_edges
 
     def mod_port(self, switch_id, port_num, open):
-        switch = get_switch(self, switch_id)[0]
+        switch = api.get_switch(self, switch_id)[0]
         datapath = switch.dp
         ofp = datapath.ofproto
         ofp_parser = datapath.ofproto_parser

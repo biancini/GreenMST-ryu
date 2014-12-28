@@ -47,6 +47,9 @@ class Link():
     def __unicode__(self):
         return u'Link (%s, %s) with cost: %s' % (self.src, self.dst, self.cost)
 
+    def __eq__(self, other):
+        return self.src == other.src and self.dst == other.dst and self.src_port == other.src_port and self.dst_port == other.dst_port
+
     def link_inverse(self):
         return Link(src=self.dst, dst=self.src, src_port=self.src_port, dst_port=self.dst_port, cost=self.cost)
 

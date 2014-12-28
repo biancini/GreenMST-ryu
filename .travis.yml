@@ -7,6 +7,7 @@ install:
   - pip install repoze.lru
   - pip install coverage
   - pip install coveralls
+  - pip install mock
 script:
   - nosetests --with-coverage --cover-package=greenmst
 after_success:

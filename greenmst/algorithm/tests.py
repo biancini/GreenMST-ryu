@@ -16,32 +16,34 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 from nose.tools import assert_equals
-from kruskal import kruskal
+from kruskal import perform
+from ..link import Link
 
 def test_empty_graph():
     # arrange
-    graph = {
-        'vertices': [],
-        'edges': set()
-    }
-    expected = set()
+    edges = []
+    expected = []
 
     # act
-    result = kruskal(graph)    
+    result = perform(edges)
 
     # assert
     assert_equals(expected, result)
 
 def test_execution():
     # arrange
-    graph = {
-        'vertices': ['A', 'B', 'C', 'D', 'E', 'F'],
-        'edges': set([(1, 'A', 'B'), (5, 'A', 'C'), (3, 'A', 'D'), (4, 'B', 'C'), (2, 'B', 'D'), (1, 'C', 'D')])
-    }
-    expected = set([(1, 'A', 'B'), (2, 'B', 'D'), (1, 'C', 'D')])
+    edges = []
+    for curedge in [(1, 'A', 'B'), (5, 'A', 'C'), (3, 'A', 'D'), (4, 'B', 'C'), (2, 'B', 'D'), (1, 'C', 'D')]:
+        curlink = Link(src=curedge[1], dst=curedge[2], cost=curedge[0])
+        edges.append(curlink)
+
+    expected = []
+    expected.append(Link(src='A', dst='B', cost=1))
+    expected.append(Link(src='B', dst='D', cost=2))
+    expected.append(Link(src='C', dst='D', cost=1))
 
     # act
-    result = kruskal(graph)    
+    result = perform(edges)
 
     # assert
     assert_equals(expected, result)

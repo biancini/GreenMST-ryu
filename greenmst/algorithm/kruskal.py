@@ -74,6 +74,4 @@ def perform(topo_edges):
             links.append(curedge)
         elif (curedge.cost, curedge.dst, curedge.src) in mst:
             links.append(curedge)
-    #for curedge in mst:
-    #    links.append(Link(src=curedge[1], dst=curedge[2], cost=curedge[0]))
     return links
