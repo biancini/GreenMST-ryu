@@ -20,6 +20,7 @@ from nose.tools import assert_equals, assert_true
 from mock import Mock, call, patch
 from link import Link
 from controller import Controller
+from topology_costs import TopologyCosts
 from ryu.ofproto import ofproto_v1_0, ofproto_v1_0_parser
 
 def random_mac():
@@ -122,7 +123,7 @@ def test_mod_port_open(mock_get_switch):
         ports.append(port)
 
     switch = Mock(dp=mock_datapath, ports=ports)
-    mock_get_switch.return_value=[switch]
+    mock_get_switch.return_value = [switch]
     controller = Controller()
 
     # act
@@ -144,7 +145,7 @@ def test_mod_port_close(mock_get_switch):
         ports.append(port)
 
     switch = Mock(dp=mock_datapath, ports=ports)
-    mock_get_switch.return_value=[switch]
+    mock_get_switch.return_value = [switch]
     controller = Controller()
 
     # act
@@ -153,3 +154,112 @@ def test_mod_port_close(mock_get_switch):
     # assert
     assert_equals(1, mock_datapath.send_msg.call_count)
     verify_port_mod(mock_datapath.send_msg.call_args[0][0], ports[1].hw_addr, 2, 63)
+
+def test_event_link_add():
+    # arrange
+    link = Mock()
+    link.to_dict.return_value = {'src': { 'dpid': 1, 'port_no': 1 }, 'dst': {'dpid': 2, 'port_no': 1 }}
+    mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
+
+    event = Mock(link=link)
+
+    controller = Controller()
+    controller.update_links = Mock()
+
+    # act
+    controller._event_link_add_handler(event)
+
+    # assert
+    assert_equals([Link(src=1, src_port=1, dst=2, dst_port=1)], controller.topo_edges)
+    assert_equals(1, controller.update_links.call_count)
+
+def test_event_link_add_inverse():
+    # arrange
+    link = Mock()
+    link.to_dict.return_value = {'src': { 'dpid': 1, 'port_no': 1 }, 'dst': {'dpid': 2, 'port_no': 1 }}
+    mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
+
+    event = Mock(link=link)
+
+    controller = Controller()
+    controller.update_links = Mock()
+    controller.topo_edges = [Link(src=2, src_port=1, dst=1, dst_port=1)]
+
+    # act
+    controller._event_link_add_handler(event)
+
+    # assert
+    assert_equals([Link(src=2, src_port=1, dst=1, dst_port=1)], controller.topo_edges)
+    assert_equals(0, controller.update_links.call_count)
+
+def test_event_link_delete():
+    # arrange
+    link = Mock()
+    link.to_dict.return_value = {'src': { 'dpid': 1, 'port_no': 1 }, 'dst': {'dpid': 2, 'port_no': 1 }}
+    mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
+
+    event = Mock(link=link)
+
+    controller = Controller()
+    controller.update_links = Mock()
+    controller.topo_edges = [Link(src=1, src_port=1, dst=2, dst_port=1)]
+
+    # act
+    controller._event_link_delete_handler(event)
+
+    # assert
+    assert_equals([], controller.topo_edges)
+    assert_equals(1, controller.update_links.call_count)
+
+def test_event_link_delete_inverse():
+    # arrange
+    link = Mock()
+    link.to_dict.return_value = {'src': { 'dpid': 1, 'port_no': 1 }, 'dst': {'dpid': 2, 'port_no': 1 }}
+    mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
+
+    event = Mock(link=link)
+
+    controller = Controller()
+    controller.update_links = Mock()
+    controller.topo_edges = [Link(src=2, src_port=1, dst=1, dst_port=1)]
+
+    # act
+    controller._event_link_delete_handler(event)
+
+    # assert
+    assert_equals([], controller.topo_edges)
+    assert_equals(1, controller.update_links.call_count)
+
+def test_event_link_delete_none():
+    # arrange
+    link = Mock()
+    link.to_dict.return_value = {'src': { 'dpid': 1, 'port_no': 1 }, 'dst': {'dpid': 2, 'port_no': 1 }}
+    mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
+
+    event = Mock(link=link)
+
+    controller = Controller()
+    controller.update_links = Mock()
+    controller.topo_edges = [Link(src=1, src_port=2, dst=3, dst_port=1)]
+
+    # act
+    controller._event_link_delete_handler(event)
+
+    # assert
+    assert_equals([Link(src=1, src_port=2, dst=3, dst_port=1)], controller.topo_edges)
+    assert_equals(0, controller.update_links.call_count)
+
+def test_set_costs():
+    # arrange
+    costs = { '1,2': 10, '2,3': 5, '1:3': 1 }
+
+    controller = Controller()
+    controller.update_links = Mock()
+
+    # act
+    controller.set_costs(costs)
+
+    # assert
+    topo_costs = TopologyCosts()
+    assert_equals(costs, topo_costs.costs)
+    assert_equals(1, controller.update_links.call_count)

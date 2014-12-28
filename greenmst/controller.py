@@ -20,9 +20,8 @@ __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 from ryu.topology import event, switches, api
 from ryu.controller.handler import set_ev_cls
-#from ryu.topology.api import get_switch
-
-from greenmst.simple_switch import SimpleSwitch
+from topology_costs import TopologyCosts
+from simple_switch import SimpleSwitch
 from link import Link
 
 class Controller(SimpleSwitch):
