@@ -16,9 +16,10 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 import json
-from nose.tools import assert_equals, assert_true
+from nose.tools import assert_equals, assert_true, raises
 from mock import Mock
 from rest_api import ControllerWithRestAPI, GreenMSTAPIController
+from encoder import LinkEncoder
 from ..link import Link
 from ..topology_costs import TopologyCosts
 
@@ -47,6 +48,28 @@ def test_link_to_json():
                 'destinationSwitch': link.to_hex_string(link.dst),
                 'destinationPort': link.dst_port }
     assert_equals(curitem, result)
+
+def test_encoder_link():
+    # arrange
+    link = Link(src=1, src_port=1, dst=2, dst_port=1, cost=1)
+    encoder = LinkEncoder()
+ 
+    # act 
+    result = encoder.default(link)
+ 
+    # assert
+    assert_equals(result, link.to_json())
+
+@raises(TypeError)
+def test_encoder_string():
+    # arrange
+    string = 'test string'
+    encoder = LinkEncoder()
+ 
+    # act 
+    result = encoder.default(string)
+ 
+    # assert
 
 def test_list_topocosts():
     # arrange 

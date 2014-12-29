@@ -263,3 +263,48 @@ def test_set_costs():
     topo_costs = TopologyCosts()
     assert_equals(costs, topo_costs.costs)
     assert_equals(1, controller.update_links.call_count)
+
+def test_set_cost():
+    # arrange
+    source = 1
+    destination = 2
+    cost = 10
+
+    topo_costs = TopologyCosts()
+    topo_costs.costs = {}
+
+    # act
+    topo_costs.set_cost(source, destination, cost)
+
+    # assert
+    assert_equals({'%s,%s' % (source,destination): cost}, topo_costs.costs)
+
+def test_get_cost():
+    # arrange
+    source = 1
+    destination = 2
+    cost = 10
+
+    topo_costs = TopologyCosts()
+    topo_costs.costs = {'%s,%s' % (source,destination): cost}
+
+    # act
+    result = topo_costs.get_cost(source, destination)
+
+    # assert
+    assert_equals(result, cost)
+
+def test_get_cost_default():
+    # arrange
+    source = 1
+    destination = 2
+    default_cost = 1
+
+    topo_costs = TopologyCosts()
+    topo_costs.costs = {}
+
+    # act
+    result = topo_costs.get_cost(source, destination)
+
+    # assert
+    assert_equals(result, default_cost)
