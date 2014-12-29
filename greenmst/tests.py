@@ -251,7 +251,7 @@ def test_event_link_delete_none():
 
 def test_set_costs():
     # arrange
-    costs = { '1,2': 10, '2,3': 5, '1:3': 1 }
+    costs = { '1,2': 10, '2,3': 5, '1,3': 1 }
 
     controller = Controller()
     controller.update_links = Mock()

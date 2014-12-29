@@ -72,9 +72,9 @@ class Link():
 
     def to_json(self):
         return {
-            'sourceSwitch': self.to_hex_string(self.dst),
+            'sourceSwitch': self.to_hex_string(self.src),
             'sourcePort': self.src_port,
-            'destinationSwitch': self.to_hex_string(self.src),
+            'destinationSwitch': self.to_hex_string(self.dst),
             'destinationPort': self.dst_port,
             'cost': self.cost
         }

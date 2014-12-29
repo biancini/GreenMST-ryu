@@ -35,8 +35,9 @@ class ControllerWithRestAPI(Controller):
     def __init__(self, *args, **kwargs):
         super(ControllerWithRestAPI, self).__init__(*args, **kwargs)
 
-        wsgi = kwargs['wsgi']
-        wsgi.register(GreenMSTAPIController, {'green_mst_api_app': self})
+        if 'wsgi' in kwargs:
+            wsgi = kwargs['wsgi']
+            wsgi.register(GreenMSTAPIController, {'green_mst_api_app': self})
 
 class GreenMSTAPIController(ControllerBase):
     def __init__(self, req, link, data, **config):
