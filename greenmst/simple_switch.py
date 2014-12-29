@@ -67,8 +67,6 @@ class SimpleSwitch(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-        if msg.in_port > 100: return
-
         dpid = datapath.id
         self.mac_to_port.setdefault(dpid, {})
 
