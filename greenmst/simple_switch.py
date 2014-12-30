@@ -103,4 +103,5 @@ class SimpleSwitch(app_manager.RyuApp):
         dpid = datapath.id
         ofproto = msg.datapath.ofproto
         if reason == ofproto.OFPPR_DELETE or reason == ofproto.OFPPR_MODIFY:
-            self.mac_to_port[dpid] = {mac:port for mac,port in self.mac_to_port[dpid].items() if mac != port_no}
+            #self.mac_to_port[dpid] = {mac:port for mac,port in self.mac_to_port[dpid].items() if mac != port_no}
+            self.mac_to_port[dpid] = {}

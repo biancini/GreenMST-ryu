@@ -400,7 +400,7 @@ def test_packet_in_flood():
 
     # assert
     assert_true(1 in controller.mac_to_port)
-    assert_equals({'ff:00:00:00:00:01': in_port}, controller.mac_to_port[1])
+    assert_equals({src: in_port}, controller.mac_to_port[1])
 
     assert_equals(0, controller.add_flow.call_count)
     assert_equals(1, mock_datapath.send_msg.call_count)
@@ -424,14 +424,14 @@ def test_packet_in_noflood():
 
     controller = SimpleSwitch()
     controller.add_flow = Mock()
-    controller.mac_to_port[1] = {'ff:00:00:00:00:02': out_port}
+    controller.mac_to_port[1] = {dst: out_port}
 
     # act
     controller._packet_in_handler(event)
 
     # assert
     assert_true(1 in controller.mac_to_port)
-    assert_equals({'ff:00:00:00:00:01': in_port, 'ff:00:00:00:00:02': out_port}, controller.mac_to_port[1])
+    assert_equals({src: in_port, dst: out_port}, controller.mac_to_port[1])
 
     assert_equals(1, controller.add_flow.call_count)
     assert_equals(mock_datapath, controller.add_flow.call_args[0][0])
@@ -446,3 +446,64 @@ def test_packet_in_noflood():
     assert_equals(1, len(mod.actions))
     assert_true(isinstance(mod.actions[0], ofproto_v1_0_parser.OFPActionOutput))
     assert_equals(out_port, mod.actions[0].port)
+
+def test_port_status_handler_delete():
+    # arrange
+    dst = 'ff:00:00:00:00:02'
+    in_port = 3
+    out_port = 3
+    reason = ofproto_v1_0.OFPPR_DELETE
+    mock_datapath = Mock(id=1, ofproto=ofproto_v1_0)
+    desc = Mock(port_no=in_port)
+    message = Mock(datapath=mock_datapath, reason=reason, desc=desc)
+    event = Mock(msg=message)
+
+    controller = SimpleSwitch()
+    controller.mac_to_port[1] = {dst: out_port}
+
+    # act
+    controller._port_status_handler(event)
+
+    # assert
+    assert_true(1 not in controller.mac_to_port or controller.mac_to_port[1] == {})
+
+def test_port_status_handler_modify():
+    # arrange
+    dst = 'ff:00:00:00:00:02'
+    in_port = 3
+    out_port = 3
+    reason = ofproto_v1_0.OFPPR_MODIFY
+    mock_datapath = Mock(id=1, ofproto=ofproto_v1_0)
+    desc = Mock(port_no=in_port)
+    message = Mock(datapath=mock_datapath, reason=reason, desc=desc)
+    event = Mock(msg=message)
+
+    controller = SimpleSwitch()
+    controller.mac_to_port[1] = {dst: out_port}
+
+    # act
+    controller._port_status_handler(event)
+
+    # assert
+    assert_true(1 not in controller.mac_to_port or controller.mac_to_port[1] == {})
+
+def test_port_status_handler_add():
+    # arrange
+    dst = 'ff:00:00:00:00:02'
+    in_port = 3
+    out_port = 3
+    reason = ofproto_v1_0.OFPPR_ADD
+    mock_datapath = Mock(id=1, ofproto=ofproto_v1_0)
+    desc = Mock(port_no=in_port)
+    message = Mock(datapath=mock_datapath, reason=reason, desc=desc)
+    event = Mock(msg=message)
+
+    controller = SimpleSwitch()
+    controller.mac_to_port[1] = {dst: out_port}
+
+    # act
+    controller._port_status_handler(event)
+
+    # assert
+    assert_true(1 in controller.mac_to_port)
+    assert_equals({dst: out_port}, controller.mac_to_port[1])
