@@ -46,35 +46,34 @@ class GreenMSTAPIController(ControllerBase):
 
     @route('greenmst', '/wm/greenmst/topocosts/json', methods=['GET'])
     def list_topocosts(self, req, **kwargs):
-        topo_costs = TopologyCosts()
-        body = json.dumps(topo_costs.costs, cls=LinkEncoder)
+        body = json.dumps(self.topology_api_app.topology_costs, cls=LinkEncoder)
         return Response(content_type='application/json', body=body)
 
     @staticmethod
-    def validate_input(body):
-        if not body:
-            return False
-
-        new_costs = json.loads(body)
+    def validate_input(new_costs):
         if not isinstance(new_costs, list):
             return False
-        pattern = re.compile(r'\d+,\d+')
 
+        pattern = re.compile('\\d+,\\d+')
         for newcost in new_costs:
             if not isinstance(newcost, dict):
                 return False
             for key,val in newcost.iteritems():
-                if not pattern.match(key) or not isinstance(val, (int, long, float)):
+                if not pattern.match(key):
+                    return False
+                if not isinstance(val, (int, long, float)):
                     return False
 
         return True
 
     @route('greenmst', '/wm/greenmst/topocosts/json', methods=['POST'])
     def set_topocosts(self, req, **kwargs):
-        topo_costs = TopologyCosts()
-        new_costs = topo_costs.costs
+        new_costs = self.topology_api_app.topology_costs
+
         # Validate JSON passed as input
-        valid_input = self.validate_input(req.body)
+        if req.body:
+            new_costs = json.loads(req.body)
+            valid_input = self.validate_input(new_costs)
 
         if valid_input:
             self.topology_api_app.set_costs(new_costs)

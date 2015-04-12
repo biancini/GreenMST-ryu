@@ -16,6 +16,7 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 import json
+import ConfigParser
 from nose.tools import assert_equals, assert_true, raises
 from mock import Mock
 from rest_api import ControllerWithRestAPI, GreenMSTAPIController
@@ -23,7 +24,8 @@ from encoder import LinkEncoder
 from ..link import Link
 from ..topology_costs import TopologyCosts
 
-MAC_ADDRESS = '01:b5:87:3b:73:b1:de:cb'
+config = ConfigParser.RawConfigParser()
+config.read('tests.cfg')
 
 def test_to_hex_string():
     # arrange
@@ -33,7 +35,7 @@ def test_to_hex_string():
     result = link.to_hex_string(link.src)
  
     # assert
-    expected = MAC_ADDRESS
+    expected = config.get('rest', 'MAC_ADDR')
     assert_equals(expected, result)
 
 def test_link_to_json():

@@ -7,3 +7,6 @@ bin/*
 .settings
 .idea
 .coverage
+
+coverage.xml
+nosetests.xml

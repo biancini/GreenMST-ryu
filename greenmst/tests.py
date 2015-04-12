@@ -16,6 +16,7 @@
 __author__ = 'Andrea Biancini <andrea.biancini@gmail.com>'
 
 import random
+import ConfigParser
 from nose.tools import assert_equals, assert_true
 from mock import Mock, call, patch
 from link import Link
@@ -26,9 +27,8 @@ from ryu.ofproto import ofproto_v1_0, ofproto_v1_0_parser, ether
 from ryu.lib.packet.ethernet import ethernet
 from ryu.lib.packet import bfd
 
-MAC_ADDR_1 = 'ff:00:00:00:00:01'
-MAC_ADDR_2 = 'ff:00:00:00:00:02'
-
+config = ConfigParser.RawConfigParser()
+config.read('tests.cfg')
 
 def random_mac():
     mac = [0x00, 0x16, 0x3e, random.randint(0x00, 0x7f), random.randint(0x00, 0xff), random.randint(0x00, 0xff)]
@@ -370,8 +370,8 @@ def test_add_flow_flood():
 
 def test_packet_in_lldp():
     # arrange
-    src = MAC_ADDR_1
-    dst = MAC_ADDR_2
+    src = config.get('main', 'MAC_ADDR_1')
+    dst = config.get('main', 'MAC_ADDR_2')
     packet = ethernet(src=src, dst=dst, ethertype=ether.ETH_TYPE_LLDP)
     mock_datapath = Mock(ofproto=ofproto_v1_0, ofproto_parser=ofproto_v1_0_parser)
     message = Mock(datapath=mock_datapath, data=packet.serialize(None, None))
@@ -387,8 +387,8 @@ def test_packet_in_lldp():
 
 def test_packet_in_flood():
     # arrange
-    src = MAC_ADDR_1
-    dst = MAC_ADDR_2
+    src = config.get('main', 'MAC_ADDR_1')
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 1
     out_port = ofproto_v1_0.OFPP_FLOOD
     packet = ethernet(src=src, dst=dst, ethertype=ether.ETH_TYPE_IP)
@@ -417,8 +417,8 @@ def test_packet_in_flood():
 
 def test_packet_in_noflood():
     # arrange
-    src = MAC_ADDR_1
-    dst = MAC_ADDR_2
+    src = config.get('main', 'MAC_ADDR_1')
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 1
     out_port = 3
     packet = ethernet(src=src, dst=dst, ethertype=ether.ETH_TYPE_IP)
@@ -453,7 +453,7 @@ def test_packet_in_noflood():
 
 def test_port_status_handler_delete_otherport():
     # arrange
-    dst = MAC_ADDR_2
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 2
     out_port = 3
     reason = ofproto_v1_0.OFPPR_DELETE
@@ -474,7 +474,7 @@ def test_port_status_handler_delete_otherport():
 
 def test_port_status_handler_delete():
     # arrange
-    dst = MAC_ADDR_2
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 3
     out_port = 3
     reason = ofproto_v1_0.OFPPR_DELETE
@@ -494,7 +494,7 @@ def test_port_status_handler_delete():
 
 def test_port_status_handler_modify_otherport():
     # arrange
-    dst = MAC_ADDR_2
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 2
     out_port = 3
     reason = ofproto_v1_0.OFPPR_MODIFY
@@ -515,7 +515,7 @@ def test_port_status_handler_modify_otherport():
 
 def test_port_status_handler_modify():
     # arrange
-    dst = MAC_ADDR_2
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 3
     out_port = 3
     reason = ofproto_v1_0.OFPPR_MODIFY
@@ -535,7 +535,7 @@ def test_port_status_handler_modify():
 
 def test_port_status_handler_add():
     # arrange
-    dst = MAC_ADDR_2
+    dst = config.get('main', 'MAC_ADDR_2')
     in_port = 3
     out_port = 3
     reason = ofproto_v1_0.OFPPR_ADD

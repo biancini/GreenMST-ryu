@@ -36,6 +36,11 @@ class Controller(SimpleSwitch):
         self.topo_edges = []
         self.redundant_edges = []
         self.mst_edges = []
+        self.topo_costs = TopologyCosts()
+
+    @property
+    def topology_costs(self):
+        return self.topo_costs.costs
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
