@@ -45,8 +45,7 @@ class GreenMSTAPIController(ControllerBase):
         self.topology_api_app = data['green_mst_api_app']
 
     @route('greenmst', '/wm/greenmst/topocosts/json', methods=['GET'])
-    @classmethod
-    def list_topocosts(cls, req, **kwargs):
+    def list_topocosts(self, req, **kwargs):
         topo_costs = TopologyCosts()
         body = json.dumps(topo_costs.costs, cls=LinkEncoder)
         return Response(content_type='application/json', body=body)
@@ -71,8 +70,7 @@ class GreenMSTAPIController(ControllerBase):
         return True
 
     @route('greenmst', '/wm/greenmst/topocosts/json', methods=['POST'])
-    @classmethod
-    def set_topocosts(cls, req, **kwargs):
+    def set_topocosts(self, req, **kwargs):
         topo_costs = TopologyCosts()
         new_costs = topo_costs.costs
         # Validate JSON passed as input
