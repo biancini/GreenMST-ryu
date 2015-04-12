@@ -41,7 +41,8 @@ def _union(vertex1, vertex2):
             parent[root2] = root1
         else:
             parent[root1] = root2
-            if rank[root1] == rank[root2]: rank[root2] += 1
+            if rank[root1] == rank[root2]:
+                rank[root2] += 1
 
 def kruskal(graph):
     for vertice in graph['vertices']:
@@ -70,8 +71,7 @@ def perform(topo_edges):
 
     links = []
     for curedge in topo_edges:
-        if (curedge.cost, curedge.src, curedge.dst) in mst:
-            links.append(curedge)
-        elif (curedge.cost, curedge.dst, curedge.src) in mst:
+        if (curedge.cost, curedge.src, curedge.dst) in mst or
+           (curedge.cost, curedge.dst, curedge.src) in mst:
             links.append(curedge)
     return links

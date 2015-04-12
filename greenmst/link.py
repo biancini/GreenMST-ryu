@@ -53,7 +53,8 @@ class Link():
     def link_inverse(self):
         return Link(src=self.dst, dst=self.src, src_port=self.src_port, dst_port=self.dst_port, cost=self.cost)
 
-    def to_hex_string(self, val, pad_to=8):
+    @classmethod
+    def to_hex_string(cls, val, pad_to=8):
         arr = str(hex(val))[2:]
         ret = ''
         # prepend the right number of leading zeros

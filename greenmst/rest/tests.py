@@ -23,6 +23,8 @@ from encoder import LinkEncoder
 from ..link import Link
 from ..topology_costs import TopologyCosts
 
+MAC_ADDRESS = '01:b5:87:3b:73:b1:de:cb'
+
 def test_to_hex_string():
     # arrange
     link = Link(src=123153254236413643, src_port=1, dst=2, dst_port=1, cost=1)
@@ -31,7 +33,7 @@ def test_to_hex_string():
     result = link.to_hex_string(link.src)
  
     # assert
-    expected = '01:b5:87:3b:73:b1:de:cb'
+    expected = MAC_ADDRESS
     assert_equals(expected, result)
 
 def test_link_to_json():

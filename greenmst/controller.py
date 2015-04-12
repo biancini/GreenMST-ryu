@@ -40,7 +40,8 @@ class Controller(SimpleSwitch):
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
         link = Link(link=ev.link)
-        if (link in self.topo_edges or link.link_inverse() in self.topo_edges): return
+        if (link in self.topo_edges or link.link_inverse() in self.topo_edges):
+            return
 
         self.topo_edges.append(link)
         self.logger.debug('Link added: %s.', link)
@@ -51,10 +52,10 @@ class Controller(SimpleSwitch):
         link = Link(link=ev.link)
         removed = False
 
-        if (link in self.topo_edges):
+        if link in self.topo_edges:
             self.topo_edges.remove(link)
             removed = True
-        if (link.link_inverse() in self.topo_edges):
+        if link.link_inverse() in self.topo_edges:
             self.topo_edges.remove(link.link_inverse())
             removed = True
 
@@ -78,7 +79,8 @@ class Controller(SimpleSwitch):
         new_redundant_edges = self.find_redundant_edges(self.mst_edges)
         self.logger.debug('newRedundantEdges = %s.', new_redundant_edges)
 
-        if len(new_redundant_edges) == 0: return
+        if len(new_redundant_edges) == 0:
+            return
 
         # Close edges in redundantEdges
         for edge in new_redundant_edges:

@@ -39,7 +39,8 @@ class SimpleSwitch(app_manager.RyuApp):
         super(SimpleSwitch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
 
-    def add_flow(self, datapath, in_port, dst, actions):
+    @classmethod
+    def add_flow(cls, datapath, in_port, dst, actions):
         ofproto = datapath.ofproto
 
         match = datapath.ofproto_parser.OFPMatch(
