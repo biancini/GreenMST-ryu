@@ -40,7 +40,7 @@ class Controller(SimpleSwitch):
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
         link = Link(link=ev.link)
-        if (link in self.topo_edges or link.link_inverse() in self.topo_edges):
+        if link in self.topo_edges or link.link_inverse() in self.topo_edges:
             return
 
         self.topo_edges.append(link)

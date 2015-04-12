@@ -71,7 +71,7 @@ def perform(topo_edges):
 
     links = []
     for curedge in topo_edges:
-        if (curedge.cost, curedge.src, curedge.dst) in mst or
+        if (curedge.cost, curedge.src, curedge.dst) in mst or \
            (curedge.cost, curedge.dst, curedge.src) in mst:
             links.append(curedge)
     return links
