@@ -74,7 +74,7 @@ class GreenMSTAPIController(ControllerBase):
         topo_costs = TopologyCosts()
         new_costs = topo_costs.costs
         # Validate JSON passed as input
-        valid_input = validate_input(req.body)
+        valid_input = self.validate_input(req.body)
 
         if valid_input:
             self.topology_api_app.set_costs(new_costs)
