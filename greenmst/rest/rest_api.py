@@ -50,7 +50,7 @@ class GreenMSTAPIController(ControllerBase):
         body = json.dumps(topo_costs.costs, cls=LinkEncoder)
         return Response(content_type='application/json', body=body)
 
-    @staticmetod
+    @staticmethod
     def validate_input(body):
         if not body:
             return False
