@@ -64,7 +64,7 @@ class GreenMSTAPIController(ControllerBase):
             if not isinstance(newcost, dict):
                 return False
             for key,val in newcost.iteritems():
-                if not pattern.match(key) and isinstance(val, (int, long, float)):
+                if not pattern.match(key) or not isinstance(val, (int, long, float)):
                     return False
 
         return True
